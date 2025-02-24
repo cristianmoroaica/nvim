@@ -106,7 +106,7 @@ require('lspconfig').ts_ls.setup{
     client.server_capabilities.documentFormattingProvider = false
 
     -- Define your custom keymaps here:
-    local opts = { noremap=true, silent=true, buffer=bufnr }
+    local opts = { noremap=true, silent=true }
     local buf_map = function(lhs, rhs)
       vim.api.nvim_buf_set_keymap(bufnr, 'n', lhs, rhs, opts)
     end
