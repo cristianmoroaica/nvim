@@ -18,6 +18,9 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'folke/trouble.nvim'
 Plug 'robitx/gp.nvim'
 Plug 'L3MON4D3/LuaSnip', {'tag': 'v2.3', 'do': 'make install_jsregexp'}
+Plug 'echasnovski/mini.nvim'
+Plug 'saghen/blink.cmp'
+" Plug 'olimorris/codecompanion.nvim'
 call plug#end()
 
 " Vim settings:
@@ -32,8 +35,6 @@ set relativenumber
 set termguicolors
 set colorcolumn=80
 " set textwidth=160
-set wrap
-set linebreak
 
 nnoremap <leader>ns :vertical topleft split <Bar> terminal nx serve<CR>
 nnoremap <leader>rnm :vertical topleft split <Bar> terminal npx react-native start<CR>
@@ -42,17 +43,26 @@ nnoremap <leader>rni :vertical topleft split <Bar> terminal npm run ios<CR>
 
 lua << EOF
 
+require('config.lazy')
+
+-- Make sure to setup `mapleader` and `maplocalleader` before
+-- loading lazy.nvim so that mappings are correct.
+-- This is also a good place to setup other settings (vim.opt)
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
+
+
 require('nvim-tree').setup({
 	view = {
 		width = 40,
 	},
 	filters = {
-    		dotfiles = false,  -- show/hide dotfiles as needed
-    		custom = { "node_modules", ".git" },
-  	},
+		dotfiles = false,  -- show/hide dotfiles as needed
+		custom = { "node_modules", ".git" },
+	},
 	renderer = {
-    icons = {
-      show = {
+	    icons = {
+	      show = {
         folder = true,
         file = true,
         git = true,
@@ -82,22 +92,7 @@ require('nvim-treesitter.configs').setup({
   indent = { enable = true },
 })
 
-local cmp = require('cmp')
-cmp.setup({
-  snippet = {
-    expand = function(args)
-      require('luasnip').lsp_expand(args.body)
-    end,
-  },
-  mapping = cmp.mapping.preset.insert({
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<CR>']      = cmp.mapping.confirm({ select = true }),
-  }),
-  sources = {
-    { name = 'nvim_lsp' },
-    { name = 'buffer' },
-  },
-})
+
 
 
 require('lspconfig').ts_ls.setup{
@@ -168,25 +163,32 @@ require("gp").setup({
 -- Load the fzf extension if available:
 pcall(require('telescope').load_extension, 'fzf')
 
+local mini_modules = {
+  "ai",
+  "pairs",
+  "comment",
+  "surround",
+  "indentscope",
+  "trailspace",
+  "move",
+  "splitjoin",
+  "git",
+  "map",
+  "notify"
+}
+
+
+-- Iterate over the modules and load each one with its default setup
+for _, module in ipairs(mini_modules) do
+  require("mini." .. module).setup()
+end
 
 -- Keymaps:
 vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = "Find Files" })
+vim.keymap.set('n', '<leader><leader>f', require('telescope.builtin').git_files, { desc = "Find Files inside Git" })
 vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, { desc = "Live Grep" })
 vim.keymap.set('n', '<leader>fb', require('telescope.builtin').buffers,   { desc = "Buffers" })
 vim.keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags, { desc = "Help Tags" })
-
-local function keymapOptions(desc)
-    return {
-        noremap = true,
-        silent = true,
-        nowait = true,
-        desc = "GPT prompt " .. desc,
-    }
-end
-
-
-
-
+vim.keymap.set('n', '<leader>s', '<cmd>Telescope lsp_workspace_symbols<CR>' ,{ desc = "Help Tags" })
 
 EOF
-
