@@ -124,10 +124,10 @@ return {
   {
     "neovim/nvim-lspconfig",
     dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
+	"saghen/blink.cmp"
     },
     config = function()
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      local capabilities = require("blink.cmp").get_lsp_capabilities()
       local lspconfig = require("lspconfig")
 
       -- Example: tsserver
@@ -158,7 +158,6 @@ return {
       "hrsh7th/cmp-cmdline",
       "hrsh7th/cmp-nvim-lsp",
       "L3MON4D3/LuaSnip",
-      "saghen/blink.cmp",
     },
     config = function()
       local cmp = require("cmp")
