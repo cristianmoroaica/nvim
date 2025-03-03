@@ -252,12 +252,13 @@ return {
                 "move",
                 "splitjoin",
                 "git",
-                "map",
-                "notify"
+                "notify",
+                "map"
             }
             for _, mod in ipairs(mini_modules) do
                 require("mini." .. mod).setup()
             end
+
         end
     },
 
@@ -270,6 +271,4 @@ return {
     -- {
     --   "olimorris/codecompanion.nvim"
     -- },
-
 }
-
