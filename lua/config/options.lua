@@ -44,3 +44,14 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 vim.keymap.set("x", "<leader>p", [["_dP]])
 vim.keymap.set("n", "<leader>w", ":w<CR>")
 vim.keymap.set("n", "<leader>q", ":q<CR>")
+
+-- Import symbol under cursor
+vim.keymap.set('n', '<leader>i', function()
+  -- Trigger code actions which often include "Import symbol"
+  vim.lsp.buf.code_action({
+    filter = function(action)
+      return action.title:match("import") ~= nil
+    end,
+    apply = true
+  })
+end, { desc = 'Import symbol under cursor' })
