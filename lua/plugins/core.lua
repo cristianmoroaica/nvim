@@ -12,8 +12,18 @@ return {
                     width = 40,
                 },
                 filters = {
-                    dotfiles = false,  -- show/hide dotfiles as needed
+                    dotfiles = true,  -- show/hide dotfiles as needed
                     custom = { "node_modules", ".git" },
+                },
+                diagnostics = {
+                    enable = true,
+                    icons = {
+                        hint = "",
+                        info = "",
+                        warning = "",
+                        error = "",
+                    },
+                    show_on_dirs = true,
                 },
                 renderer = {
                     icons = {
@@ -132,23 +142,22 @@ return {
         build = "make",
     },
 
-    -- 6) LSP Config + nvim-cmp & extras
+    -- 6) LSP Config + blink cmp & extras
     {
         "neovim/nvim-lspconfig",
         dependencies = {
-            "saghen/blink.cmp"
+            "saghen/blink.cmp",
+            "artemave/workspace-diagnostics.nvim"
         },
         config = function()
             local capabilities = require("blink.cmp").get_lsp_capabilities()
             local lspconfig = require("lspconfig")
 
-            -- Example: tsserver
-            -- If you originally wrote: lspconfig.ts_ls.setup(...), it’s typically lspconfig.tsserver
-            -- unless you have a custom TypeScript LSP. Adjust accordingly.
+            -- TypeScript
             lspconfig.ts_ls.setup {
                 capabilities = capabilities,
                 on_attach = function(client, bufnr)
-                    -- If using prettier or something else, turn off tsserver formatting
+                    -- If using prettier or something else, turn off ts_ls formatting
                     client.server_capabilities.documentFormattingProvider = false
 
                     local opts = { noremap=true, silent=true, buffer = bufnr }
@@ -157,14 +166,13 @@ return {
                     vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
                     vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
                 end,
-            }
+           }
 
+            -- Angular Language Server
             local cwd = vim.fn.getcwd()
             local handle = io.popen("npm root -g")
             local npmGlobalPath = handle:read("*a")
             handle:close()
-
-            -- Remove any trailing whitespace (including newlines) from npmGlobalPath
             npmGlobalPath = npmGlobalPath:gsub("%s+$", "")
 
             local project_library_path = cwd .. "/node_modules"
@@ -177,55 +185,20 @@ return {
             }
 
             require'lspconfig'.angularls.setup{
+                capabilities = capabilities,
                 cmd = cmd,
                 on_new_config = function(new_config, new_root_dir)
                     new_config.cmd = cmd
-                end
+                end,
+            --      on_attach = function(client, bufnr)
+            --         require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
+            --     end
             }
 
         end
     },
 
-    -- nvim-cmp
-    -- {
-    --     "hrsh7th/nvim-cmp",
-    --     dependencies = {
-    --         "hrsh7th/cmp-buffer",
-    --         "hrsh7th/cmp-path",
-    --         "hrsh7th/cmp-cmdline",
-    --         "hrsh7th/cmp-nvim-lsp",
-    --         "L3MON4D3/LuaSnip",
-    --     },
-    --     config = function()
-    --         local cmp = require("cmp")
-    --         local luasnip = require("luasnip")
-    --
-    --         require("luasnip.loaders.from_vscode").lazy_load()  -- optional if using vs-code-like snippets
-    --
-    --         cmp.setup({
-    --             snippet = {
-    --                 expand = function(args)
-    --                     luasnip.lsp_expand(args.body)
-    --                 end,
-    --             },
-    --             mapping = {
-    --                 ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-    --                 ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-    --                 ["<C-Space>"] = cmp.mapping.complete(),
-    --                 ["<CR>"] = cmp.mapping.confirm({ select = true }),
-    --             },
-    --             sources = cmp.config.sources({
-    --                 { name = "nvim_lsp" },
-    --                 { name = "buffer" },
-    --                 { name = "path" },
-    --             }),
-    --         })
-    --     end
-    -- },
-
-
     "rafamadriz/friendly-snippets",
-
     -- LuaSnip build step
     {
         "L3MON4D3/LuaSnip",
@@ -242,14 +215,10 @@ return {
     -- 7) Trouble
     {
         "folke/trouble.nvim",
-        config = function()
-            require("trouble").setup({
-                position = "right",
-                icons = true,
-                mode = "document_diagnostics",
-                use_diagnostic_signs = true
-            })
-        end
+        position = "right",
+        icons = true,
+        mode = "document_diagnostics",
+        use_diagnostic_signs = true
     },
 
     -- 8) gp.nvim
@@ -287,7 +256,6 @@ return {
                 "splitjoin",
                 "git",
                 "notify",
-                "map"
             }
             for _, mod in ipairs(mini_modules) do
                 require("mini." .. mod).setup()

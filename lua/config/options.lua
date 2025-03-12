@@ -55,3 +55,9 @@ vim.keymap.set('n', '<leader>i', function()
     apply = true
   })
 end, { desc = 'Import symbol under cursor' })
+
+-- Code actions
+vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>')
+
+-- Manual prettier with npx
+vim.keymap.set('n', '<leader>pr', ':Neoformat prettier<CR>')
