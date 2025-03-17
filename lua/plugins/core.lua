@@ -185,14 +185,13 @@ return {
             }
 
             require'lspconfig'.angularls.setup{
-                capabilities = capabilities,
                 cmd = cmd,
                 on_new_config = function(new_config, new_root_dir)
                     new_config.cmd = cmd
                 end,
-            --      on_attach = function(client, bufnr)
-            --         require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
-            --     end
+
+                on_attach = on_attach,
+                on_attach = capabilities,
             }
 
         end
