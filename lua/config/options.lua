@@ -8,7 +8,7 @@ vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4      -- Number of spaces that a <BS> will delete
 vim.opt.expandtab = true     -- Use spaces instead of tabs
 vim.opt.autoindent = true    -- Copy indent from current line when starting a new line
-vim.opt.smartindent = true   -- Make auto-indenting smarter
+vim.opt.smartindent = true
 
 vim.cmd [[
   highlight Comment guifg=#fc9900
@@ -42,13 +42,12 @@ vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 -- Paste over selection
-vim.keymap.set("x", "<leader>p", [["_dP]])
+vim.keymap.set("x", "<leader>p", [["+dP]])
 vim.keymap.set("n", "<leader>w", ":w<CR>")
 vim.keymap.set("n", "<leader>q", ":q<CR>")
 
 -- Import symbol under cursor
 vim.keymap.set('n', '<leader>i', function()
-    -- Trigger code actions which often include "Import symbol"
     vim.lsp.buf.code_action({
         filter = function(action)
             return action.title:match("import") ~= nil
@@ -78,5 +77,5 @@ vim.keymap.set("i", "<C-j>", "<C-o>j")
 vim.keymap.set("i", "<C-k>", "<C-o>k")
 
 -- Remapping notes
-vim.keymap.set("x", "<leader>nt", "<cmd>:Notes<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>nl", "<cmd>:NotesList<CR>", { noremap = true, silent = true })
 
