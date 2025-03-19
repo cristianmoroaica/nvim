@@ -12,7 +12,7 @@ return {
                     width = 40,
                 },
                 filters = {
-                    dotfiles = true,  -- show/hide dotfiles as needed
+                    dotfiles = true,
                     custom = { "node_modules", ".git" },
                 },
                 diagnostics = {
@@ -60,29 +60,30 @@ return {
     {
         "rose-pine/neovim",
         name = "rose-pine",
-        lazy = false,          -- load immediately so we can set the colorscheme
-        priority = 1000,       -- ensure it loads first
+        lazy = false,
+        priority = 1000,
         config = function()
             vim.cmd.colorscheme("rose-pine")
         end
-    },
-    {
-        "sainnhe/gruvbox-material",  -- you can keep it if you want
     },
 
     -- 3) Airline
     {
         "vim-airline/vim-airline",
+        'vim-airline/vim-airline-themes',
+        "tpope/vim-fugitive",
+        "sainnhe/gruvbox-material",
         config = function()
             vim.g.airline_theme = "gruvbox_material"
             vim.g.airline_powerline_fonts = 1
+            -- vim.g['airline#extensions#branch#enabled'] = 1
         end
     },
 
     -- 4) Treesitter
     {
         "nvim-treesitter/nvim-treesitter",
-        build = ":TSUpdate",   -- run TSUpdate after install
+        build = ":TSUpdate",
         config = function()
             require("nvim-treesitter.configs").setup({
                 ensure_installed = {
@@ -125,10 +126,10 @@ return {
                 },
             })
 
-            -- Optionally load fzf extension
+            -- Load fzf extension
             pcall(require("telescope").load_extension, "fzf")
 
-            -- Keymaps (optional: you might want them in a separate file)
+            -- Keymaps
             vim.keymap.set("n", "<leader>ff", function() require("telescope.builtin").find_files() end, { desc = "Find Files" })
             vim.keymap.set("n", "<leader><leader>f", function() require("telescope.builtin").git_files() end, { desc = "Git Files" })
             vim.keymap.set("n", "<leader>fg", function() require("telescope.builtin").live_grep() end, { desc = "Live Grep" })
@@ -220,26 +221,7 @@ return {
         use_diagnostic_signs = true
     },
 
-    -- 8) gp.nvim
-    {
-        "robitx/gp.nvim",
-        config = function()
-            require("gp").setup({
-                agents = {
-                    {
-                        provider = "openai",
-                        name = "o3-mini test",
-                        chat = true,
-                        command = false,
-                        model = { model = "o3-mini", temperature = 1.1, top_p = 1, max_completion_token = 10000 },
-                        system_prompt = require("gp.defaults").chat_system_prompt,
-                    },
-                },
-            })
-        end
-    },
-
-    -- 9) mini.nvim
+    -- 8) mini.nvim
     {
         "echasnovski/mini.nvim",
         version = false,  -- stable is default if you want
@@ -263,13 +245,8 @@ return {
         end
     },
 
-    -- 10) ThePrimeagen/vim-be-good
+    -- 9) ThePrimeagen/vim-be-good
     {
         "ThePrimeagen/vim-be-good",
     },
-
-    -- If you decide to use or keep codecompanion
-    -- {
-    --   "olimorris/codecompanion.nvim"
-    -- },
 }
