@@ -216,14 +216,21 @@ return {
     {
         "folke/trouble.nvim",
         opts = {
-            position = 'right'
+            modes = {
+                diagnostics = {
+                    win = {
+                        position = "right",
+                        size = 0.25
+                    }
+                }
+            }
         },
         position = 'right',
         cmd = "Trouble",
         keys = {
             {
                 "<leader>xx",
-                "<cmd>Trouble diagnostics toggle<cr>",
+                "<cmd>Trouble diagnostics toggle win.position=right<cr>",
                 desc = "Diagnostics (Trouble)",
             },
             {
