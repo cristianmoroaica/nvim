@@ -14,25 +14,18 @@ vim.cmd [[
   highlight Comment guifg=#fc9900
 ]]
 
--- Nx / React Native Mappings
-vim.keymap.set("n", "<leader>ns",  ":vertical topleft split | terminal nx serve<CR>")
-vim.keymap.set("n", "<leader>nb",  ":vertical topleft split | terminal nx build --configuration=production<CR>")
-vim.keymap.set("n", "<leader>rns", ":vertical topleft split | terminal npx react-native start<CR>")
-vim.keymap.set("n", "<leader>rna", ":vertical topleft split | terminal npm run android<CR>")
-vim.keymap.set("n", "<leader>rni", ":vertical topleft split | terminal npm run ios<CR>")
-
 -- Trim whitespace on current line:
 vim.keymap.set("n", "<leader>tw", ":s/\\s\\+$//e<CR>")
 
 -- Debugging
 vim.keymap.set("n", "<leader>en", ":lua vim.diagnostic.goto_next({severity=vim.diagnostic.severity.ERROR, wrap = true})<CR>")
 vim.keymap.set("n", "<leader>ep", ":lua vim.diagnostic.goto_prev({severity=vim.diagnostic.severity.ERROR, wrap = true})<CR>")
-vim.keymap.set("n", "<leader>ed", ":lua vim.diagnostic.open_float()<CR>")
+vim.keymap.set("n", "<leader>eo", ":lua vim.diagnostic.open_float()<CR>")
 
 -- Telescope
 vim.keymap.set("n", "<leader>fs", ":Telescope lsp_document_symbols<CR>")
 vim.keymap.set("n", "<leader>fw", ":Telescope lsp_workspace_symbols<CR>")
-vim.keymap.set('n', '<Leader>r', "<cmd>lua require('telescope.builtin').lsp_references()<CR>", { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>r', "<cmd>lua require('telescope.builtin').lsp_references()<CR>", { noremap = true, silent = true })
 
 -- Gen (Ollama)
 vim.keymap.set("n", "<leader>-", ":Gen<CR>")
@@ -40,6 +33,14 @@ vim.keymap.set("n", "<leader>-", ":Gen<CR>")
 -- Move lines and indent
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+
+-- Add lines without entering insert mode
+vim.keymap.set('n', '<leader>j', function()
+  vim.fn.append(vim.fn.line('.'), '')
+end, { desc = 'Add blank line below without entering insert mode' })
+vim.keymap.set('n', '<leader>k', function()
+  vim.fn.append(vim.fn.line('.') - 1, '')
+end, { desc = 'Add blank line above without entering insert mode' })
 
 -- Paste over selection
 vim.keymap.set("x", "<leader>p", [["+dP]])
@@ -80,5 +81,8 @@ vim.keymap.set("i", "<C-k>", "<C-o>k")
 vim.keymap.set("n", "<leader>nl", "<cmd>:NotesList<CR>", { noremap = true, silent = true })
 
 -- Adjusting vertical window size
-vim.keymap.set("n", "<leader>,", ":vertical resize -5<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>.", ":vertical resize +5<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>.", ":vertical resize -5<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>,", ":vertical resize +5<CR>", { noremap = true, silent = true })
+
+-- Color picker
+vim.keymap.set("n", "<leader>cp", "<cmd>:CccPick<CR>")

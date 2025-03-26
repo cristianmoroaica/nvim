@@ -154,6 +154,18 @@ return {
             local capabilities = require("blink.cmp").get_lsp_capabilities()
             local lspconfig = require("lspconfig")
 
+            -- HTML
+            lspconfig.html.setup {
+                capabilities = capabilities,
+                on_attach = on_attach
+            }
+
+            -- JSON
+            lspconfig.jsonls.setup {
+                capabilities = capabilities,
+                on_attach = on_attach
+            }
+
             -- TypeScript
             lspconfig.ts_ls.setup {
                 capabilities = capabilities,
@@ -194,6 +206,16 @@ return {
                 on_attach = on_attach,
                 on_attach = capabilities,
             }
+
+            require'lspconfig'.cssls.setup {
+                capabilities = capabilities,
+                on_attach = function(client, bufnr)
+                    if client.server_capabilities.colorProvider then
+                        require("document-color").buf_attach(bufnr)
+                    end
+                end,
+            }
+
 
         end
     },
