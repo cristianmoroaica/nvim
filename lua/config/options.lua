@@ -14,6 +14,9 @@ vim.cmd [[
   highlight Comment guifg=#fc9900
 ]]
 
+-- Nvim Tree
+vim.keymap.set("n", "<leader>e", "<cmd>:NvimTreeToggle<CR>")
+
 -- Trim whitespace on current line:
 vim.keymap.set("n", "<leader>tw", ":s/\\s\\+$//e<CR>")
 
