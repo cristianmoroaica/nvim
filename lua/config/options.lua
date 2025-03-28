@@ -89,3 +89,20 @@ vim.keymap.set("n", "<leader>,", ":vertical resize +5<CR>", { noremap = true, si
 
 -- Color picker
 vim.keymap.set("n", "<leader>cp", "<cmd>:CccPick<CR>")
+
+-- Git add all, commit, push
+function _G.gitAddCommitPush()
+  local msg = vim.fn.input("Commit message: ")
+  if msg == "" then
+    print("No commit message provided. Aborting.")
+    return
+  end
+  vim.schedule(function()
+    vim.cmd("Git add -A")
+    vim.cmd("Git commit -m `" .. vim.fn.shellescape(msg) .. "`")
+    vim.cmd("Git push")
+  end)
+end
+
+vim.api.nvim_set_keymap('n', '<leader>ac', ':lua gitAddCommitPush()<CR>', { noremap = true, silent = true })
+
