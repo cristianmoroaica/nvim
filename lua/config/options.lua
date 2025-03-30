@@ -103,6 +103,25 @@ function _G.gitAddCommitPush()
     vim.cmd("Git push")
   end)
 end
-
 vim.api.nvim_set_keymap('n', '<leader>ac', ':lua gitAddCommitPush()<CR>', { noremap = true, silent = true })
+
+-- Code Companion
+vim.keymap.set("", "<leader>cc", ":CodeCompanion<CR>")
+vim.keymap.set("", "<leader>ccc", ":CodeCompanionChat<CR>")
+
+-- Copilot shortcuts
+vim.keymap.set("i", "<C-Up>", "<Plug>(copilot-next)")
+vim.keymap.set("i", "<C-Down>", "<Plug>(copilot-previous)")
+vim.api.nvim_create_user_command('CopilotToggle', function ()
+  vim.g.copilot_enabled = not vim.g.copilot_enabled
+  if vim.g.copilot_enabled then
+    vim.cmd('Copilot disable')
+    print("Copilot OFF")
+  else
+    vim.cmd('Copilot enable')
+    print("Copilot ON")
+  end
+end, {nargs = 0})
+
+vim.keymap.set("", "<leader>\\", ":CopilotToggle<CR>")
 

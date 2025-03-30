@@ -212,16 +212,6 @@ return {
                 on_attach = capabilities,
             }
 
-            require'lspconfig'.cssls.setup {
-                capabilities = capabilities,
-                on_attach = function(client, bufnr)
-                    if client.server_capabilities.colorProvider then
-                        require("document-color").buf_attach(bufnr)
-                    end
-                end,
-            }
-
-
         end
     },
 

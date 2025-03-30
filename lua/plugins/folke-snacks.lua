@@ -31,6 +31,20 @@ return {
                 notification = {
                     -- wo = { wrap = true } -- Wrap notifications
                 }
+            },
+            zen = {
+                window = {
+                    backdrop = 0.95, -- Adjust the overall window backdrop (optional)
+                    width = 0.75,    -- You can also adjust the window width (optional)
+                },
+                on_open = function()
+                    -- Set custom highlights when Zen Mode is activated
+                    vim.cmd("hi Comment guifg=#717171") -- Example: Set Normal background to black and foreground to white
+                end,
+                on_close = function()
+                    -- Revert highlights when Zen Mode is closed
+                    vim.cmd("hi Comment guifg=#fc9900") -- Example: Set Normal background to black and foreground to white
+                end,
             }
         },
         keys = {
