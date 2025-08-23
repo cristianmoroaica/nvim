@@ -12,7 +12,7 @@ return {
                     openai = function()
                         return require("codecompanion.adapters").extend("openai", {
                             env = {
-                                api_key = "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"
+                                api_key = os.getenv("OPENAI_API_KEY"),
                             }
                         })
                     end,
@@ -20,7 +20,7 @@ return {
                         return require("codecompanion.adapters").extend("copilot", {
                             schema = {
                                 model = {
-                                    default = "claude-3.7-sonnet"
+                                    default = "claude-sonnet-4"
                                 }
                             }
                         })

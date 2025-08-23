@@ -10,6 +10,23 @@ vim.opt.expandtab = true     -- Use spaces instead of tabs
 vim.opt.autoindent = true    -- Copy indent from current line when starting a new line
 vim.opt.smartindent = true
 
+-- Enable autoread
+vim.o.autoread = true
+
+vim.o.updatetime = 1000 -- 1 second
+
+-- Watch for file changes and reload automatically
+vim.api.nvim_create_autocmd({"FocusGained", "BufEnter", "CursorHold", "CursorHoldI"}, {
+    command = "checktime"
+})
+
+-- Blade
+vim.filetype.add({
+    pattern = {
+        [".*%.blade%.php"] = "blade",
+    },
+})
+
 vim.cmd [[
   highlight Comment guifg=#fc9900
 ]]
@@ -39,10 +56,10 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 -- Add lines without entering insert mode
 vim.keymap.set('n', '<leader>j', function()
-  vim.fn.append(vim.fn.line('.'), '')
+    vim.fn.append(vim.fn.line('.'), '')
 end, { desc = 'Add blank line below without entering insert mode' })
 vim.keymap.set('n', '<leader>k', function()
-  vim.fn.append(vim.fn.line('.') - 1, '')
+    vim.fn.append(vim.fn.line('.') - 1, '')
 end, { desc = 'Add blank line above without entering insert mode' })
 
 -- Paste over selection
@@ -92,16 +109,16 @@ vim.keymap.set("n", "<leader>cp", "<cmd>:CccPick<CR>")
 
 -- Git add all, commit, push
 function _G.gitAddCommitPush()
-  local msg = vim.fn.input("Commit message: ")
-  if msg == "" then
-    print("No commit message provided. Aborting.")
-    return
-  end
-  vim.schedule(function()
-    vim.cmd("Git add -A")
-    vim.cmd("Git commit -m `" .. vim.fn.shellescape(msg) .. "`")
-    vim.cmd("Git push")
-  end)
+    local msg = vim.fn.input("Commit message: ")
+    if msg == "" then
+        print("No commit message provided. Aborting.")
+        return
+    end
+    vim.schedule(function()
+        vim.cmd("Git add -A")
+        vim.cmd("Git commit -m `" .. vim.fn.shellescape(msg) .. "`")
+        vim.cmd("Git push")
+    end)
 end
 vim.api.nvim_set_keymap('n', '<leader>ac', ':lua gitAddCommitPush()<CR>', { noremap = true, silent = true })
 
@@ -113,15 +130,14 @@ vim.keymap.set("", "<leader>ccc", ":CodeCompanionChat<CR>")
 vim.keymap.set("i", "<C-Up>", "<Plug>(copilot-next)")
 vim.keymap.set("i", "<C-Down>", "<Plug>(copilot-previous)")
 vim.api.nvim_create_user_command('CopilotToggle', function ()
-  vim.g.copilot_enabled = not vim.g.copilot_enabled
-  if vim.g.copilot_enabled then
-    vim.cmd('Copilot disable')
-    print("Copilot OFF")
-  else
-    vim.cmd('Copilot enable')
-    print("Copilot ON")
-  end
+    vim.g.copilot_enabled = not vim.g.copilot_enabled
+    if vim.g.copilot_enabled then
+        vim.cmd('Copilot disable')
+        print("Copilot OFF")
+    else
+        vim.cmd('Copilot enable')
+        print("Copilot ON")
+    end
 end, {nargs = 0})
 
 vim.keymap.set("", "<leader>\\", ":CopilotToggle<CR>")
-

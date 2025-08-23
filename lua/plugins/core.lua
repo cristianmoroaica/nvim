@@ -8,6 +8,11 @@ return {
         },
         config = function()
             require("nvim-tree").setup({
+                filesystem_watchers = {
+                    enable = false,
+                },
+                update_cwd = true,
+                respect_buf_cwd = true,
                 update_focused_file = {
                     enable = true,
                     update_cwd = false,
@@ -99,6 +104,16 @@ return {
                 incremental_selection = { enable = true },
                 indent = { enable = true },
             })
+
+            local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+            parser_config.blade = {
+                install_info = {
+                    url = "https://github.com/EmranMR/tree-sitter-blade",
+                    files = { "src/parser.c" },
+                    branch = "main",
+                },
+                filetype = "blade",
+            }
         end
     },
 
@@ -158,6 +173,7 @@ return {
         config = function()
             local capabilities = require("blink.cmp").get_lsp_capabilities()
             local lspconfig = require("lspconfig")
+            local util = require("lspconfig.util")
 
             -- HTML
             lspconfig.html.setup {
@@ -174,6 +190,14 @@ return {
             -- TypeScript
             lspconfig.ts_ls.setup {
                 capabilities = capabilities,
+                -- enable single‐file support so tsserver will attach
+                single_file_support = true,
+
+                -- if no project root is found, fall back to the file’s directory
+                root_dir = function(fname)
+                    return util.root_pattern("package.json", "tsconfig.json", ".git")(fname)
+                        or util.path.dirname(fname)
+                end,
                 on_attach = function(client, bufnr)
                     -- If using prettier or something else, turn off ts_ls formatting
                     client.server_capabilities.documentFormattingProvider = false
@@ -210,6 +234,14 @@ return {
 
                 on_attach = on_attach,
                 on_attach = capabilities,
+            }
+
+
+            -- Kotlin
+            lspconfig.kotlin_language_server.setup {
+                cmd = { "kotlin-language-server.bat" },
+                capabilities = capabilities,
+                on_attach = on_attach
             }
 
         end
@@ -294,6 +326,7 @@ return {
                 "splitjoin",
                 "git",
                 "notify",
+                "sessions"
             }
             for _, mod in ipairs(mini_modules) do
                 require("mini." .. mod).setup()
