@@ -1,7 +1,8 @@
 local function news(force)
-  local file_path = [[E:\Projects\mimir\current-news.md]]
-  local last_run_path = [[E:\Projects\mimir\last_news_run.txt]]
-  local error_log_path = [[E:\Projects\mimir\news_error.log]]
+  local mimir_path = os.getenv("MIMIR_PROJECTS_PATH") or [[E:\Projects\mimir]]
+  local file_path = mimir_path .. [[\current-news.md]]
+  local last_run_path = mimir_path .. [[\last_news_run.txt]]
+  local error_log_path = mimir_path .. [[\news_error.log]]
   local six_hours = 21600  -- 6 * 3600 seconds
 
   local function get_last_run()
@@ -113,7 +114,7 @@ except requests.exceptions.RequestException as e:
 ]]
 
     local error_output = ''
-    local job_id = vim.fn.jobstart({'py', '-c', python_code}, {
+    local job_id = vim.fn.jobstart({'python', '-c', python_code}, {
       on_stdout = function(_, data)
         if data then
           error_output = error_output .. table.concat(data, '\n') .. '\n'
