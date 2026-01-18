@@ -1,21 +1,29 @@
--- lua/plugins/neoformat.lua
 return {
-  "sbdchd/neoformat",
-  event = "BufReadPre",
+  "stevearc/conform.nvim",
+  event = { "BufWritePre" },
   config = function()
-    -- We'll skip neoformat_try_node_exe and just call npx directly:
-    vim.g.neoformat_html_prettier = {
-      exe = "npx",
-      args = {
-        "prettier",
-        "--stdin-filepath",
-        vim.fn.fnameescape(vim.api.nvim_buf_get_name(0)),
-        "--plugin-search-dir=."
+    require("conform").setup({
+      formatters_by_ft = {
+        lua = { "stylua" },
+        javascript = { "prettier" },
+        typescript = { "prettier" },
+        javascriptreact = { "prettier" },
+        typescriptreact = { "prettier" },
+        json = { "prettier" },
+        html = { "prettier" },
+        css = { "prettier" },
+        scss = { "prettier" },
+        markdown = { "prettier" },
+        yaml = { "prettier" },
       },
-      stdin = 1
-    }
+      format_on_save = {
+        timeout_ms = 1000,
+        lsp_fallback = true,
+      },
+    })
 
-    vim.g.neoformat_enabled_html = { "prettier" }
+    vim.keymap.set("n", "<leader>f", function()
+      require("conform").format({ lsp_fallback = true })
+    end, { desc = "Format buffer" })
   end,
 }
-

@@ -3,6 +3,18 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.termguicolors = true
 vim.opt.colorcolumn = "100"
+vim.opt.signcolumn = "yes"
+vim.opt.cursorline = true
+vim.opt.clipboard = "unnamedplus"
+vim.opt.mouse = "a"
+vim.opt.undofile = true
+vim.opt.swapfile = false
+vim.opt.backup = false
+vim.opt.writebackup = false
+vim.opt.splitright = true
+vim.opt.splitbelow = true
+vim.opt.scrolloff = 8
+vim.opt.sidescrolloff = 8
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4      -- Number of spaces that a <BS> will delete
@@ -15,11 +27,6 @@ vim.o.autoread = true
 
 vim.o.updatetime = 1000 -- 1 second
 
--- Watch for file changes and reload automatically
-vim.api.nvim_create_autocmd({"FocusGained", "BufEnter", "CursorHold", "CursorHoldI"}, {
-    command = "checktime"
-})
-
 -- Blade
 vim.filetype.add({
     pattern = {
@@ -30,117 +37,3 @@ vim.filetype.add({
 vim.cmd [[
   highlight Comment guifg=#fc9900
 ]]
-
--- Nvim Tree
-vim.keymap.set("n", "<leader>e", "<cmd>:NvimTreeToggle<CR>")
-
--- Trim whitespace on current line:
-vim.keymap.set("n", "<leader>tw", ":s/\\s\\+$//e<CR>")
-
--- Debugging
-vim.keymap.set("n", "<leader>en", ":lua vim.diagnostic.goto_next({severity=vim.diagnostic.severity.ERROR, wrap = true})<CR>")
-vim.keymap.set("n", "<leader>ep", ":lua vim.diagnostic.goto_prev({severity=vim.diagnostic.severity.ERROR, wrap = true})<CR>")
-vim.keymap.set("n", "<leader>eo", ":lua vim.diagnostic.open_float()<CR>")
-
--- Telescope
-vim.keymap.set("n", "<leader>fs", ":Telescope lsp_document_symbols<CR>")
-vim.keymap.set("n", "<leader>fw", ":Telescope lsp_workspace_symbols<CR>")
-vim.keymap.set('n', '<leader>r', "<cmd>lua require('telescope.builtin').lsp_references()<CR>", { noremap = true, silent = true })
-
--- Gen (Ollama)
-vim.keymap.set("n", "<leader>-", ":Gen<CR>")
-
--- Move lines and indent
-vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
-vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
-
--- Add lines without entering insert mode
-vim.keymap.set('n', '<leader>j', function()
-    vim.fn.append(vim.fn.line('.'), '')
-end, { desc = 'Add blank line below without entering insert mode' })
-vim.keymap.set('n', '<leader>k', function()
-    vim.fn.append(vim.fn.line('.') - 1, '')
-end, { desc = 'Add blank line above without entering insert mode' })
-
--- Paste over selection
-vim.keymap.set("x", "<leader>p", [["+dP]])
-vim.keymap.set("n", "<leader>w", ":w<CR>")
-vim.keymap.set("n", "<leader>q", ":q<CR>")
-
--- Import symbol under cursor
-vim.keymap.set('n', '<leader>i', function()
-    vim.lsp.buf.code_action({
-        filter = function(action)
-            return action.title:match("import") ~= nil
-        end,
-        apply = true
-    })
-end, { desc = 'Import symbol under cursor' })
-
--- Code actions
-vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>')
-
--- Other keymapping
-vim.keymap.set("n", "<leader>ll", "<cmd>:Other<CR>")
-vim.keymap.set("n", "<leader>ltn", "<cmd>:OtherTabNew<CR>")
-vim.keymap.set("n", "<leader>lp", "<cmd>:OtherSplit<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>lv", "<cmd>:OtherVSplit<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>lc", "<cmd>:OtherClear<CR>", { noremap = true, silent = true })
-
--- Context specific bindings
-vim.keymap.set("n", "<leader>lt", "<cmd>:Other test<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>ls", "<cmd>:Other scss<CR>", { noremap = true, silent = true })
-
--- Insert mode navigation
-vim.keymap.set("i", "<C-l>", "<C-o>l")
-vim.keymap.set("i", "<C-h>", "<C-o>h")
-vim.keymap.set("i", "<C-j>", "<C-o>j")
-vim.keymap.set("i", "<C-k>", "<C-o>k")
-
--- Remapping notes
-vim.keymap.set("n", "<leader>nl", "<cmd>:NotesList<CR>", { noremap = true, silent = true })
-
--- Adjusting vertical window size
-vim.keymap.set("n", "<leader>.", ":vertical resize -5<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>,", ":vertical resize +5<CR>", { noremap = true, silent = true })
-
--- Color picker
-vim.keymap.set("n", "<leader>cp", "<cmd>:CccPick<CR>")
-
--- Git add all, commit, push
-function _G.gitAddCommitPush()
-    local msg = vim.fn.input("Commit message: ")
-    if msg == "" then
-        print("No commit message provided. Aborting.")
-        return
-    end
-    vim.schedule(function()
-        vim.cmd("Git add -A")
-        vim.cmd("Git commit -m `" .. vim.fn.shellescape(msg) .. "`")
-        vim.cmd("Git push")
-    end)
-end
-vim.api.nvim_set_keymap('n', '<leader>ac', ':lua gitAddCommitPush()<CR>', { noremap = true, silent = true })
-
--- Code Companion
-vim.keymap.set("", "<leader>cc", ":CodeCompanion<CR>")
-vim.keymap.set("", "<leader>ccc", ":CodeCompanionChat<CR>")
-
--- Copilot shortcuts
-vim.keymap.set("i", "<C-Up>", "<Plug>(copilot-next)")
-vim.keymap.set("i", "<C-Down>", "<Plug>(copilot-previous)")
-vim.api.nvim_create_user_command('CopilotToggle', function ()
-    vim.g.copilot_enabled = not vim.g.copilot_enabled
-    if vim.g.copilot_enabled then
-        vim.cmd('Copilot disable')
-        print("Copilot OFF")
-    else
-        vim.cmd('Copilot enable')
-        print("Copilot ON")
-    end
-end, {nargs = 0})
-
-vim.keymap.set("", "<leader>\\", ":CopilotToggle<CR>")
-
--- Resource monitor
-vim.keymap.set("n", "<leader>rm", ":ResMonToggle<CR>")

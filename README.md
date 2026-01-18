@@ -12,7 +12,7 @@ Personal Neovim configuration with a focus on productivity, search/navigation, a
 - Diagnostics and context: `trouble.nvim`, `workspace-diagnostics.nvim`, `treesitter-context`
 - UI polish: `rose-pine`, `vim-airline`, `satellite.nvim`, `mini.nvim`
 - Markdown and notes: `render-markdown.nvim`, `mimirs_notes.nvim`
-- Utilities: `neoformat`, `emmet-vim`, `yaml.nvim`, `other.nvim`, `ccc.nvim`, `nvim-colorizer.lua`
+- Utilities: `conform.nvim`, `emmet-vim`, `yaml.nvim`, `other.nvim`, `ccc.nvim`, `nvim-colorizer.lua`
 - Custom features: floating terminals, news command, tabline resource monitor
 
 ## Plugins (grouped)
@@ -22,7 +22,7 @@ Personal Neovim configuration with a focus on productivity, search/navigation, a
 - **LSP/Diagnostics**: `nvim-lspconfig`, `trouble.nvim`, `workspace-diagnostics.nvim`, `treesitter-context`
 - **Completion/Snippets**: `blink.cmp`, `LuaSnip`, `friendly-snippets`
 - **AI**: `codecompanion.nvim`, `supermaven-nvim`
-- **Editing Helpers**: `emmet-vim`, `other.nvim`, `neoformat`, `yaml.nvim`
+- **Editing Helpers**: `emmet-vim`, `other.nvim`, `conform.nvim`, `yaml.nvim`
 - **Colors/Markdown/Notes**: `ccc.nvim`, `nvim-colorizer.lua`, `render-markdown.nvim`, `mimirs_notes.nvim`
 
 ## Custom Commands
@@ -30,6 +30,7 @@ Personal Neovim configuration with a focus on productivity, search/navigation, a
 - `:News` - Open/refresh the daily news file (uses Langflow)
 - `:ResMonToggle` - Toggle the tabline resource monitor
 - `:Floaterminal` - Toggle the floating terminal
+- `:checkhealth nvim_config` - Basic config health checks
 
 ## Setup
 
@@ -53,7 +54,9 @@ Open Neovim and run `:Lazy` to install all plugins.
 - `init.lua` - Main entry point
 - `lua/config/` - Core configuration
   - `lazy.lua` - Plugin manager setup (`lazy.nvim`)
-  - `options.lua` - Vim options and keymaps
+  - `options.lua` - Vim options
+  - `keymaps.lua` - Keymaps
+  - `autocmds.lua` - Autocommands
   - `dotenv.lua` - Loads `.env` file for secrets
   - `news.lua` - News aggregation feature
   - `terminal.lua` - Floating terminal toggles

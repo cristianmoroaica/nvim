@@ -93,6 +93,10 @@ return {
     -- 4) Treesitter
     {
         "nvim-treesitter/nvim-treesitter",
+        dependencies = {
+            "nvim-treesitter/nvim-treesitter-textobjects",
+            "windwp/nvim-ts-autotag",
+        },
         build = ":TSUpdate",
         config = function()
             require("nvim-treesitter.configs").setup({
@@ -103,6 +107,39 @@ return {
                 highlight = { enable = true },
                 incremental_selection = { enable = true },
                 indent = { enable = true },
+                autotag = { enable = true },
+                textobjects = {
+                    select = {
+                        enable = true,
+                        lookahead = true,
+                        keymaps = {
+                            ["af"] = "@function.outer",
+                            ["if"] = "@function.inner",
+                            ["ac"] = "@class.outer",
+                            ["ic"] = "@class.inner",
+                        },
+                    },
+                    move = {
+                        enable = true,
+                        set_jumps = true,
+                        goto_next_start = {
+                            ["]m"] = "@function.outer",
+                            ["]]"] = "@class.outer",
+                        },
+                        goto_next_end = {
+                            ["]M"] = "@function.outer",
+                            ["]["] = "@class.outer",
+                        },
+                        goto_previous_start = {
+                            ["[m"] = "@function.outer",
+                            ["[["] = "@class.outer",
+                        },
+                        goto_previous_end = {
+                            ["[M"] = "@function.outer",
+                            ["[]"] = "@class.outer",
+                        },
+                    },
+                },
             })
 
             local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
@@ -174,6 +211,16 @@ return {
             local capabilities = require("blink.cmp").get_lsp_capabilities()
             local lspconfig = require("lspconfig")
             local util = require("lspconfig.util")
+            local on_attach = function(_, bufnr)
+                local opts = { noremap = true, silent = true, buffer = bufnr }
+                vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+                vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+                vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+                vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+                vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+                vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+                vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+            end
 
             -- HTML
             lspconfig.html.setup {
@@ -201,12 +248,7 @@ return {
                 on_attach = function(client, bufnr)
                     -- If using prettier or something else, turn off ts_ls formatting
                     client.server_capabilities.documentFormattingProvider = false
-
-                    local opts = { noremap=true, silent=true, buffer = bufnr }
-                    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-                    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-                    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-                    vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+                    on_attach(client, bufnr)
                 end,
             }
 
@@ -228,18 +270,17 @@ return {
 
             require'lspconfig'.angularls.setup{
                 cmd = cmd,
+                capabilities = capabilities,
                 on_new_config = function(new_config, new_root_dir)
                     new_config.cmd = cmd
                 end,
 
                 on_attach = on_attach,
-                on_attach = capabilities,
             }
 
 
             -- Kotlin
             lspconfig.kotlin_language_server.setup {
-                cmd = { "kotlin-language-server.bat" },
                 capabilities = capabilities,
                 on_attach = on_attach
             }
