@@ -17,9 +17,9 @@ vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 8
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
-vim.opt.softtabstop = 4      -- Number of spaces that a <BS> will delete
-vim.opt.expandtab = true     -- Use spaces instead of tabs
-vim.opt.autoindent = true    -- Copy indent from current line when starting a new line
+vim.opt.softtabstop = 4 -- Number of spaces that a <BS> will delete
+vim.opt.expandtab = false -- Use spaces instead of tabs
+vim.opt.autoindent = true -- Copy indent from current line when starting a new line
 vim.opt.smartindent = true
 
 -- Enable autoread
@@ -29,11 +29,11 @@ vim.o.updatetime = 1000 -- 1 second
 
 -- Blade
 vim.filetype.add({
-    pattern = {
-        [".*%.blade%.php"] = "blade",
-    },
+	pattern = {
+		[".*%.blade%.php"] = "blade",
+	},
 })
 
-vim.cmd [[
+vim.cmd([[
   highlight Comment guifg=#fc9900
-]]
+]])
