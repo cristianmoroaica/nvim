@@ -278,6 +278,12 @@ return {
                 on_attach = on_attach,
             }
 
+            -- Rust
+            lspconfig.rust_analyzer.setup {
+                capabilities = capabilities,
+                on_attach = on_attach,
+                root_dir = util.root_pattern("Cargo.toml", "rust-project.json", ".git"),
+            }
 
             -- Kotlin
             lspconfig.kotlin_language_server.setup {

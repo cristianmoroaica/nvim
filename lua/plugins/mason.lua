@@ -18,6 +18,7 @@ return {
           "angularls",
           "kotlin_language_server",
           "lua_ls",
+          "rust_analyzer",
         },
         automatic_installation = true,
       })
