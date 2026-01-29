@@ -31,6 +31,7 @@ vim.keymap.set(
 
 -- Gen (Ollama)
 vim.keymap.set("n", "<leader>-", ":Gen<CR>")
+vim.keymap.set("n", "<leader>st", "<cmd>SupermavenToggle<CR>", { desc = "Toggle Supermaven" })
 
 -- Move lines and indent
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
@@ -81,6 +82,12 @@ end, { desc = "Import symbol under cursor" })
 
 -- Code actions
 vim.keymap.set("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>")
+
+-- Cargo watch in a vertical split
+vim.keymap.set("n", "<leader>cw", function()
+	vim.cmd("vsplit")
+	vim.cmd("terminal cargo watch -x run --poll -c")
+end, { desc = "Cargo watch in split" })
 
 -- Other keymapping
 vim.keymap.set("n", "<leader>ll", "<cmd>Other<CR>")
