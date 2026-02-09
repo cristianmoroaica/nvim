@@ -220,49 +220,36 @@ return {
 			"artemave/workspace-diagnostics.nvim"
 		},
 		config = function()
-			local capabilities = require("blink.cmp").get_lsp_capabilities()
-			local lspconfig = require("lspconfig")
-			local util = require("lspconfig.util")
-			local on_attach = function(_, bufnr)
-				local opts = { noremap = true, silent = true, buffer = bufnr }
-				vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-				vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-				vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-				vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-				vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-				vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-				vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
-			end
+			-- LSP keymaps via LspAttach autocmd
+			vim.api.nvim_create_autocmd("LspAttach", {
+				callback = function(args)
+					local opts = { noremap = true, silent = true, buffer = args.buf }
+					vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+					vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+					vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+					vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+					vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+					vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+					vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
 
-			-- HTML
-			lspconfig.html.setup {
-				capabilities = capabilities,
-				on_attach = on_attach
-			}
+					-- Disable formatting for ts_ls
+					local client = vim.lsp.get_client_by_id(args.data.client_id)
+					if client and client.name == "ts_ls" then
+						client.server_capabilities.documentFormattingProvider = false
+					end
+				end,
+			})
 
-			-- JSON
-			lspconfig.jsonls.setup {
-				capabilities = capabilities,
-				on_attach = on_attach
-			}
+			-- Global defaults (capabilities from blink.cmp)
+			vim.lsp.config("*", {
+				capabilities = require("blink.cmp").get_lsp_capabilities(),
+			})
 
 			-- TypeScript
-			lspconfig.ts_ls.setup {
-				capabilities = capabilities,
-				-- enable single‐file support so tsserver will attach
+			vim.lsp.config("ts_ls", {
 				single_file_support = true,
-
-				-- if no project root is found, fall back to the file’s directory
-				root_dir = function(fname)
-					return util.root_pattern("package.json", "tsconfig.json", ".git")(fname)
-						or util.path.dirname(fname)
-				end,
-				on_attach = function(client, bufnr)
-					-- If using prettier or something else, turn off ts_ls formatting
-					client.server_capabilities.documentFormattingProvider = false
-					on_attach(client, bufnr)
-				end,
-			}
+				root_markers = { "package.json", "tsconfig.json", ".git" },
+			})
 
 			-- Angular Language Server
 			local cwd = vim.fn.getcwd()
@@ -272,36 +259,30 @@ return {
 			npmGlobalPath = npmGlobalPath:gsub("%s+$", "")
 
 			local project_library_path = cwd .. "/node_modules"
-			local cmd = {
-				"node",
-				npmGlobalPath .. "/@angular/language-server/bin/ngserver",
-				"--ngProbeLocations", project_library_path,
-				"--tsProbeLocations", project_library_path,
-				"--stdio",
-			}
-
-			require 'lspconfig'.angularls.setup {
-				cmd = cmd,
-				capabilities = capabilities,
-				on_new_config = function(new_config, new_root_dir)
-					new_config.cmd = cmd
-				end,
-
-				on_attach = on_attach,
-			}
+			vim.lsp.config("angularls", {
+				cmd = {
+					"node",
+					npmGlobalPath .. "/@angular/language-server/bin/ngserver",
+					"--ngProbeLocations", project_library_path,
+					"--tsProbeLocations", project_library_path,
+					"--stdio",
+				},
+			})
 
 			-- Rust
-			lspconfig.rust_analyzer.setup {
-				capabilities = capabilities,
-				on_attach = on_attach,
-				root_dir = util.root_pattern("Cargo.toml", "rust-project.json", ".git"),
-			}
+			vim.lsp.config("rust_analyzer", {
+				root_markers = { "Cargo.toml", "rust-project.json", ".git" },
+			})
 
-			-- Kotlin
-			lspconfig.kotlin_language_server.setup {
-				capabilities = capabilities,
-				on_attach = on_attach
-			}
+			-- Enable all servers
+			vim.lsp.enable({
+				"html",
+				"jsonls",
+				"ts_ls",
+				"angularls",
+				"rust_analyzer",
+				"kotlin_language_server",
+			})
 		end
 	},
 
