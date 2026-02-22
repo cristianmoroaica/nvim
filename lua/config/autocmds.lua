@@ -28,10 +28,12 @@ vim.api.nvim_create_user_command("SavePDF", function(opts)
 			prompt_title = "SavePDF — select folder",
 			finder = finders.new_oneshot_job(
 				{ "fd", "--type", "d", "--hidden", "--exclude", ".git", ".", home },
-				{ entry_maker = function(line)
-					local display = line:gsub("^" .. vim.pesc(home), "~")
-					return { value = line, display = display, ordinal = display }
-				end }
+				{
+					entry_maker = function(line)
+						local display = line:gsub("^" .. vim.pesc(home), "~")
+						return { value = line, display = display, ordinal = display }
+					end
+				}
 			),
 			sorter = conf.generic_sorter({}),
 			attach_mappings = function(prompt_bufnr)
