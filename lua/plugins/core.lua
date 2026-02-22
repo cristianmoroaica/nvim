@@ -100,10 +100,11 @@ return {
 		},
 		build = ":TSUpdate",
 		config = function()
-			require("nvim-treesitter.config").setup({
+			require("nvim-treesitter.configs").setup({
 				ensure_installed = {
 					"lua", "python", "javascript", "html", "css",
-					"typescript", "php", "json", "tsx"
+					"typescript", "php", "json", "tsx",
+					"latex", "markdown", "markdown_inline",
 				},
 				highlight = { enable = true },
 				incremental_selection = { enable = true },

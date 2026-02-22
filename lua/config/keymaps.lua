@@ -133,3 +133,43 @@ vim.keymap.set("n", "<leader>ac", ":lua gitAddCommitPush()<CR>", { noremap = tru
 
 -- Resource monitor
 vim.keymap.set("n", "<leader>rm", ":ResMonToggle<CR>")
+
+-- Prepend invoice template
+vim.keymap.set("n", "<leader>ip", function()
+	if not ensure_modifiable() then
+		return
+	end
+	local template = {
+		"---",
+		"geometry:",
+		"  - top=12mm",
+		"  - left=18mm",
+		"  - right=18mm",
+		"  - bottom=18mm",
+		"header-includes:",
+		"  - \\usepackage{tabularx}",
+		"  - \\usepackage{graphicx}",
+		"  - \\usepackage{array}",
+		"  - \\usepackage{polyglossia}",
+		"  - \\setdefaultlanguage{romanian}",
+		"---",
+		"",
+		"\\newcolumntype{R}{>{\\raggedleft\\arraybackslash}X}",
+		"",
+		"\\begin{tabularx}{\\linewidth}{X R}",
+		"{{\\Large\\bfseries Ofertă Comercială}\\par\\par } & {\\raggedleft\\includegraphics[height=3cm]{/home/mcr/notes/mimora_black.png}}\\\\",
+		"& \\\\",
+		"{\\bfseries FIRMA S.A.}\\par",
+		"Adresa \\par",
+		"\\hfill \\break",
+		"CUI: \\par",
+		"Reg.Com.: &",
+		"",
+		"\\par {\\bfseries MIMIRS NEXUS DEVELOPMENT S.R.L. }\\par",
+		"Int. Gheorghe Simionescu 19, Bucuresti, Sector 1\\par",
+		"CUI: 44922622\\par",
+		"Reg.Com.: J40/16116/2021 \\par",
+		"\\end{tabularx}",
+	}
+	vim.api.nvim_buf_set_lines(0, 0, 0, false, template)
+end, { desc = "Prepend invoice template" })
