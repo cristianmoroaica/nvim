@@ -60,7 +60,7 @@ vim.keymap.set("n", "<leader>k", function()
 		return
 	end
 	local row = vim.api.nvim_win_get_cursor(0)[1] -- 1-based
-	local idx = math.max(row - 1, 0) -- convert to 0-based, clamp at top
+	local idx = math.max(row - 1, 0)           -- convert to 0-based, clamp at top
 	-- insert above current line: start=end=idx (0-based)
 	vim.api.nvim_buf_set_lines(0, idx, idx, true, { "" })
 end, { desc = "Add blank line above without entering insert mode" })
@@ -129,6 +129,7 @@ function _G.gitAddCommitPush()
 		vim.cmd("Git push")
 	end)
 end
+
 vim.keymap.set("n", "<leader>ac", ":lua gitAddCommitPush()<CR>", { noremap = true, silent = true })
 
 -- Resource monitor
@@ -157,7 +158,7 @@ vim.keymap.set("n", "<leader>ip", function()
 		"\\newcolumntype{R}{>{\\raggedleft\\arraybackslash}X}",
 		"",
 		"\\begin{tabularx}{\\linewidth}{X R}",
-		"{{\\Large\\bfseries Ofertă Comercială}\\par\\par } & {\\raggedleft\\includegraphics[height=3cm]{/home/mcr/notes/mimora_black.png}}\\\\",
+		"{{\\Large\\bfseries Lorem ipsum}\\par\\par } & {\\raggedleft\\includegraphics[height=3cm]{/home/mcr/notes/mimora_black.png}}\\\\",
 		"& \\\\",
 		"{\\bfseries FIRMA S.A.}\\par",
 		"Adresa \\par",
