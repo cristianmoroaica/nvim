@@ -17,7 +17,7 @@ vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 8
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
-vim.opt.softtabstop = 4 -- Number of spaces that a <BS> will delete
+vim.opt.softtabstop = 4   -- Number of spaces that a <BS> will delete
 vim.opt.expandtab = false -- Use spaces instead of tabs
 vim.opt.autoindent = true -- Copy indent from current line when starting a new line
 vim.opt.smartindent = true
@@ -37,3 +37,6 @@ vim.filetype.add({
 vim.cmd([[
   highlight Comment guifg=#fc9900
 ]])
+
+-- LSP Logs - Error only
+vim.lsp.set_log_level("ERROR")
