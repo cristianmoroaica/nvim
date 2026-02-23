@@ -283,6 +283,7 @@ return {
 				"angularls",
 				"rust_analyzer",
 				"kotlin_language_server",
+				"texlab",
 			})
 		end
 	},

@@ -19,6 +19,7 @@ return {
           "kotlin_language_server",
           "lua_ls",
           "rust_analyzer",
+          "texlab",
         },
         automatic_installation = true,
       })
