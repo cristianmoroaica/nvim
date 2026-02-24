@@ -1,5 +1,6 @@
 {
   "LuaSnip": { "branch": "master", "commit": "03c8e67eb7293c404845b3982db895d59c0d1538" },
+  "TakaTime": { "branch": "main", "commit": "d94fb3a81d1e4f2c56b83d70152807ee22856c98" },
   "blink.cmp": { "branch": "main", "commit": "4b18c32adef2898f95cdef6192cbd5796c1a332d" },
   "ccc.nvim": { "branch": "main", "commit": "9d1a256e006decc574789dfc7d628ca11644d4c2" },
   "codediff.nvim": { "branch": "main", "commit": "783258e587bd1bc2bba4d617d648e7424d594107" },
