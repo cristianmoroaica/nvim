@@ -1,49 +1,57 @@
 # Neovim Configuration
 
-Personal Neovim configuration with a focus on productivity, search/navigation, and AI assistance.
+Personal Neovim configuration with a focus on productivity.
 
 ## Highlights
 
 - File explorer with icons: `nvim-tree.lua` + `nvim-web-devicons`
 - Fast search and pickers: `telescope.nvim`, `telescope-fzf-native.nvim`, `snacks.nvim`
-- LSP support: `nvim-lspconfig` (HTML, JSON, TypeScript, Angular, Kotlin)
+- LSP support: `nvim-lspconfig` + `mason.nvim` (HTML, JSON, TypeScript, Angular, Kotlin, Lua, Rust, TexLab)
 - Completion and snippets: `blink.cmp`, `LuaSnip`, `friendly-snippets`
-- AI assistance: `codecompanion.nvim` (OpenAI/Copilot adapters), `supermaven-nvim`
+- AI assistance: `supermaven-nvim`, `copilot.vim`
 - Diagnostics and context: `trouble.nvim`, `workspace-diagnostics.nvim`, `treesitter-context`
-- UI polish: `rose-pine`, `vim-airline`, `satellite.nvim`, `mini.nvim`
+- UI polish: `rose-pine`, `gruvbox-material`, `vim-airline`, `satellite.nvim`, `mini.nvim`, `snacks.nvim`
 - Markdown and notes: `render-markdown.nvim`, `mimirs_notes.nvim`
-- Utilities: `conform.nvim`, `emmet-vim`, `yaml.nvim`, `other.nvim`, `ccc.nvim`, `nvim-colorizer.lua`
-- Custom features: floating terminals, news command, tabline resource monitor
+- LaTeX editing: `vimtex` with Zathura viewer
+- Code formatting: `conform.nvim` (Prettier, Stylua)
+- Utilities: `emmet-vim`, `yaml.nvim`, `other.nvim`, `ccc.nvim`, `nvim-colorizer.lua`, `which-key.nvim`
+- Remote editing: `remote-sshfs.nvim`
+- Git tools: `vim-fugitive`, `mini.git`, `codediff.nvim`
+- Custom features: floating terminals, news command, tabline resource monitor, WPM mode signal
 
 ## Plugins (grouped)
 
-- **Core UI**: `rose-pine`, `vim-airline`, `satellite.nvim`, `mini.nvim`, `snacks.nvim`
+- **Core UI**: `rose-pine`, `gruvbox-material`, `vim-airline`, `satellite.nvim`, `mini.nvim`, `snacks.nvim`, `which-key.nvim`
 - **Navigation/Search**: `nvim-tree.lua`, `telescope.nvim`, `telescope-fzf-native.nvim`, `harpoon`
-- **LSP/Diagnostics**: `nvim-lspconfig`, `trouble.nvim`, `workspace-diagnostics.nvim`, `treesitter-context`
+- **LSP/Diagnostics**: `nvim-lspconfig`, `mason.nvim`, `mason-lspconfig.nvim`, `mason-tool-installer.nvim`, `trouble.nvim`, `workspace-diagnostics.nvim`, `treesitter-context`
+- **Treesitter**: `nvim-treesitter`, `nvim-treesitter-textobjects`, `nvim-ts-autotag`
 - **Completion/Snippets**: `blink.cmp`, `LuaSnip`, `friendly-snippets`
-- **AI**: `codecompanion.nvim`, `supermaven-nvim`
-- **Editing Helpers**: `emmet-vim`, `other.nvim`, `conform.nvim`, `yaml.nvim`
+- **AI**: `supermaven-nvim`
+- **Git**: `vim-fugitive`, `mini.git`, `codediff.nvim`
+- **Editing Helpers**: `emmet-vim`, `other.nvim`, `conform.nvim`, `yaml.nvim`, `mini.pairs`, `mini.surround`, `mini.comment`, `mini.move`, `mini.splitjoin`
 - **Colors/Markdown/Notes**: `ccc.nvim`, `nvim-colorizer.lua`, `render-markdown.nvim`, `mimirs_notes.nvim`
+- **LaTeX**: `vimtex`
+- **Remote**: `remote-sshfs.nvim`
+- **Tracking**: `TakaTime`
+- **Custom Local**: `resmon` (tabline resource monitor), `wpm-mode` (WPM mode signal)
 
 ## Custom Commands
 
-- `:News` - Open/refresh the daily news file (uses Langflow)
-- `:ResMonToggle` - Toggle the tabline resource monitor
-- `:Floaterminal` - Toggle the floating terminal
-- `:checkhealth nvim_config` - Basic config health checks
+- `:ResMonToggle` / `:ResMonOpen` / `:ResMonClose` - Control the tabline resource monitor
+- `:Floaterminal` / `<leader>tt` - Toggle the floating terminal (supports up to 4 independent terminals)
+- `:SavePDF` - Convert markdown to PDF via mdpdf with font selection. REQUIRES mdpdf.
+- `:checkhealth nvim_config` - Basic config health checks (git, rg, fd, node)
 
 ## Setup
 
-### 1. Configure secrets
+### 1. Prerequisites
 
-Create/edit a `.env` file in the repo root with your secrets:
+Ensure the following are installed (checked by `:checkhealth nvim_config`):
 
-```env
-OPENAI_API_KEY=your-openai-api-key
-LANGFLOW_API_KEY=your-langflow-api-key
-LANGFLOW_NEWS_FLOW_URL=
-MIMIR_PROJECTS_PATH=C:\path\to\mimir
-```
+- `git`
+- `rg` (ripgrep)
+- `fd`
+- `node`
 
 ### 2. Install plugins
 
@@ -56,13 +64,11 @@ Open Neovim and run `:Lazy` to install all plugins.
   - `lazy.lua` - Plugin manager setup (`lazy.nvim`)
   - `options.lua` - Vim options
   - `keymaps.lua` - Keymaps
-  - `autocmds.lua` - Autocommands
+  - `autocmds.lua` - Autocommands (file change detection, `:SavePDF`, format on save)
   - `dotenv.lua` - Loads `.env` file for secrets
-  - `news.lua` - News aggregation feature
-  - `terminal.lua` - Floating terminal toggles
-  - `resmon.lua` - Tabline resource monitor
-- `lua/plugins/` - Plugin configurations
-
-## Secrets
-
-The `.env` file is gitignored. Never commit secrets!
+  - `news.lua` - News aggregation feature (Langflow API)
+  - `terminal.lua` - Floating terminal toggles (4 independent terminals)
+  - `resmon.lua` - Tabline resource monitor (CPU, RAM, disk, network, GPU)
+  - `sshfs.lua` - SSH remote filesystem configuration
+- `lua/plugins/` - Plugin configurations (24 files)
+- `lua/health/` - Health check module
