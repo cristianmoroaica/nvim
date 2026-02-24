@@ -135,7 +135,10 @@ vim.keymap.set("n", "<leader>ac", ":lua gitAddCommitPush()<CR>", { noremap = tru
 -- Resource monitor
 vim.keymap.set("n", "<leader>rm", ":ResMonToggle<CR>")
 
--- Prepend invoice template
+-- Code diff
+vim.keymap.set("n", "<leader>cd", ":CodeDiff<CR>")
+
+-- Prepend .md latex template
 vim.keymap.set("n", "<leader>ip", function()
 	if not ensure_modifiable() then
 		return
