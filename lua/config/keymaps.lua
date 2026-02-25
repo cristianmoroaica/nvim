@@ -138,27 +138,51 @@ vim.keymap.set("n", "<leader>rm", ":ResMonToggle<CR>")
 -- Code diff
 vim.keymap.set("n", "<leader>cd", ":CodeDiff<CR>")
 
--- Prepend .md latex template
+-- New LaTeX file
+vim.keymap.set("n", "<leader>nt", function()
+	vim.ui.input({ prompt = "LaTeX filename: " }, function(name)
+		if not name or name == "" then
+			return
+		end
+		if not name:match("%.tex$") then
+			name = name .. ".tex"
+		end
+		local dir = vim.fn.expand("~/Projects/LaTeX")
+		vim.fn.mkdir(dir, "p")
+		local filepath = dir .. "/" .. name
+		local expanded = vim.fn.expand(filepath)
+		if vim.fn.filereadable(expanded) == 0 then
+			vim.fn.writefile({
+				"\\documentclass[a4paper,12pt]{article}",
+				"\\usepackage[margin=2.5cm]{geometry}",
+				"",
+				"\\begin{document}",
+				"",
+				"\\end{document}",
+			}, expanded)
+		end
+		vim.cmd("edit " .. vim.fn.fnameescape(filepath))
+	end)
+end, { desc = "New LaTeX file" })
+
+-- Prepend invoice template
 vim.keymap.set("n", "<leader>ip", function()
 	if not ensure_modifiable() then
 		return
 	end
 	local template = {
-		"---",
-		"geometry:",
-		"  - top=12mm",
-		"  - left=18mm",
-		"  - right=18mm",
-		"  - bottom=18mm",
-		"header-includes:",
-		"  - \\usepackage{tabularx}",
-		"  - \\usepackage{graphicx}",
-		"  - \\usepackage{array}",
-		"  - \\usepackage{polyglossia}",
-		"  - \\setdefaultlanguage{romanian}",
-		"---",
+		"\\documentclass[a4paper,12pt]{article}",
+		"\\usepackage[top=12mm,left=18mm,right=18mm,bottom=18mm]{geometry}",
+		"\\usepackage{tabularx}",
+		"\\usepackage{graphicx}",
+		"\\usepackage{array}",
+		"\\usepackage{fontspec}",
+		"\\usepackage{polyglossia}",
+		"\\setdefaultlanguage{romanian}",
 		"",
 		"\\newcolumntype{R}{>{\\raggedleft\\arraybackslash}X}",
+		"",
+		"\\begin{document}",
 		"",
 		"\\begin{tabularx}{\\linewidth}{X R}",
 		"{{\\Large\\bfseries Lorem ipsum}\\par\\par } & {\\raggedleft\\includegraphics[height=3cm]{/home/mcr/notes/mimora_black.png}}\\\\",
@@ -174,6 +198,8 @@ vim.keymap.set("n", "<leader>ip", function()
 		"CUI: 44922622\\par",
 		"Reg.Com.: J40/16116/2021 \\par",
 		"\\end{tabularx}",
+		"",
+		"\\end{document}",
 	}
 	vim.api.nvim_buf_set_lines(0, 0, 0, false, template)
 end, { desc = "Prepend invoice template" })

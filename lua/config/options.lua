@@ -40,6 +40,3 @@ vim.cmd([[
 
 -- LSP Logs - Error only
 vim.lsp.set_log_level("ERROR")
-
--- Vimtex
-vim.g.vimtex_view_method = "zathura"
