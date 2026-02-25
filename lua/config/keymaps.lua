@@ -108,6 +108,7 @@ vim.keymap.set("i", "<C-k>", "<C-o>k")
 
 -- Remapping notes
 vim.keymap.set("n", "<leader>nl", "<cmd>NotesList<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>ns", "<cmd>NotesSync<CR>", { desc = "Notes: manual sync" })
 
 -- Adjusting vertical window size
 vim.keymap.set("n", "<leader>.", ":vertical resize -5<CR>", { noremap = true, silent = true })
