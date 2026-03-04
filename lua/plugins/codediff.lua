@@ -10,6 +10,8 @@ return {
 					accept_both = "<leader>cb",
 					next_conflict = "<leader>cn",
 					previous_conflict = "<leader>cp",
+					next_hunk = "<leader>cj",
+					previous_hunk = "<leader>ck",
 				}
 			}
 		}
